@@ -6,13 +6,13 @@ public class ForwardPage extends Page{
   
   public ForwardPage(String url, ForwardPage parent){
     super(url);
-    children = new ArrayList<Page>();
+    children = new ArrayList<ForwardPage>();
     this.parent = parent;
   }
   
   public ForwardPage(String url){
     super(url);
-    children = new ArrayList<Page>();
+    children = new ArrayList<ForwardPage>();
     this.parent = null;
   }
   
@@ -24,46 +24,42 @@ public class ForwardPage extends Page{
     return children;
   }
   
-  public void setParent(){
+  public void setParent(ForwardPage parent){
+    this.parent = parent;
   }
   
   public ForwardPage getParent(){
     return parent;
   }
   
-  public ArrayList<ForwardPage> getParentPath(){
-    ArrayList<ForwardPage> pages = new ArrayList<ForwardPage>();
+  public String getParentPath(ForwardPage fPage){
+    String result = this.getURL();
     
-    pages.add(this);
-    
-    if(parent != null){
-      return pages;
+    if(parent == null){
+      return result;
     }
+    
     else{
-      pages.add(parent);
-      ArrayList<ForwardPage> grandparents = parent.getParentPath();
-      for(ForwardPage page : grandparents){
-        pages.add(page);
-      }
+      return (result + "\n" + getParentPath(this.getParent()));
     }
   }
   
   public boolean familySharesMember(BackwardPage bPage){
     ArrayList<BackwardPage> parents = bPage.getParents();
-    boolean sharedpage = false;
+    boolean shared = false;
     
     for(int i = 0; i < parents.size(); i++){
       for(int j = 0; j < children.size(); j++){
         if(parents.get(i).equals(children.get(j))){
-          sharedPage = true;
+          shared = true;
         }
       }
     }
-    return sharedPage;
+    return shared;
   }
   
   public String toString(){
-    String result = "This Page's URL: " url;
+    String result = "This Page's URL: " + this.getURL();
     
     if(parent != null){
       result += "\nThis Page's Parent's URL: "+ parent.getURL();
