@@ -30,7 +30,7 @@ public class WikipediaGamePanel extends JPanel{
   private JPanel makePathDisplay(){
     JPanel result = new JPanel();
     result.setLayout(new FlowLayout());
-    pathDisplay.setText("Your path will display here after you enter two URLS");
+    pathDisplay.setText("Your path will display here after you enter two valid URLS");
     result.add(pathDisplay);
     return result;
   }
@@ -56,7 +56,7 @@ public class WikipediaGamePanel extends JPanel{
     endURLInput.setPreferredSize(new Dimension(100, 20));
     result.add(endURLInput);
     
-    JButton getPathButton = new JButton("Get path!");
+    JButton getPathButton = new JButton("Get Path!");
     getPathButton.addActionListener(new ButtonListener());
     result.add(getPathButton);
     
@@ -85,10 +85,21 @@ public class WikipediaGamePanel extends JPanel{
    * */
   private class ButtonListener implements ActionListener{
     public void actionPerformed (ActionEvent event) {
-      game.setStartURL(startURLInput.getText());
-      game.setEndURL(endURLInput.getText());
-      game.generatePath();
-      pathDisplay.setText(game.toString());
+      
+      try{
+        //REMEMBER TO CHANGE THIS!!!! (THE STARTURL VS THE END URL)
+        game.setEndURL(startURLInput.getText());
+        game.setStartURL(endURLInput.getText());
+        game.generatePath();
+        pathDisplay.setText(game.toString());
+        //resetting size of jpanel to accomodate the game.toString()
+        Dimension dimension = WikipediaGamePanel.this.getPreferredSize();
+        WikipediaGamePanel.this.setPreferredSize(dimension);
+      }
+      catch (StringIndexOutOfBoundsException e){
+        //if the URLs were not valid, setStartURL and/or setEndURL will throw this exception
+        pathDisplay.setText("Sorry, one or both of your URLs is not valid.  Please try again.");
+      }
     }
     
   }

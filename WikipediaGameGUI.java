@@ -6,7 +6,7 @@ import javax.swing.*;
 public class WikipediaGameGUI{
   
   public static void main(String[] args){
-    JFrame frame = new JFrame("Grad School Comparison");
+    JFrame frame = new JFrame("Wikipedia Game");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
     
@@ -15,6 +15,7 @@ public class WikipediaGameGUI{
     
     frame.getContentPane().add(newGame);
     frame.pack();
+    frame.setPreferredSize(frame.getPreferredSize());
     frame.setVisible(true);
   }
 }
