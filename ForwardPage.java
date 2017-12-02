@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Scanner;
+import java.io.IOException;
 
 public class ForwardPage extends Page{
   private ArrayList<ForwardPage> children;
@@ -16,9 +20,8 @@ public class ForwardPage extends Page{
     this.parent = null;
   }
   
-  //We have to do some webscraping here to find the children
-  public void retrieveFamily(){
-    
+  public ArrayList<ForwardPage> getChildren(){
+    return children;
   }
   
   public void retrieveFamily(){
@@ -36,7 +39,7 @@ public class ForwardPage extends Page{
             for(int i = 0; i < wordsInTitle.length - 1; i++){
               title += wordsInTitle + "_";
             }
-            title += wordsInTitle[wordsInTitle - 1];
+            title += wordsInTitle[wordsInTitle.length - 1];
               
             children.add(new ForwardPage(("https://en.wikipedia.org/wiki/" + title), child, this));
           }
@@ -46,7 +49,6 @@ public class ForwardPage extends Page{
         System.out.println(ex);
       }
     }
-  }
   
   public void setParent(ForwardPage parent){
     this.parent = parent;
