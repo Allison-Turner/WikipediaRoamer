@@ -25,6 +25,8 @@ public class WikipediaGame{
     endURL = end;
     startPage = new ForwardPage(startURL, getTitle(startURL)); 
     endPage = new BackwardPage(endURL, getTitle(endURL));
+    forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
+    backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
   }
   
   private String getTitle(String url){
@@ -33,6 +35,8 @@ public class WikipediaGame{
   
   public WikipediaGame(){
     path = "Have yet to find a path.";
+    forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
+    backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
   }
   
   public void setStartURL(String s){
