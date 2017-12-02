@@ -25,10 +25,14 @@ public class WikipediaGame{
     endURL = end;
     startPage = new ForwardPage(startURL);
     endPage = new BackwardPage(endURL);
+    forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
+    backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
   }
   
   public WikipediaGame(){
     path = "Have yet to find a path.";
+    forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
+    backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
   }
   
   public void setStartURL(String s){
@@ -43,7 +47,7 @@ public class WikipediaGame{
   
   public String generatePath(){
     
-    String path = "Path Not Found.";
+    path = "Path Not Found.";
     
     ForwardPage front = startPage;
     BackwardPage back = endPage;
