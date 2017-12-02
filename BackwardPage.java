@@ -23,7 +23,7 @@ public class BackwardPage extends Page{
   //Webscraping wooo
   public void retrieveFamily(){
     String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
-      + this.title.replace(" ","+") + "&bllimit=25blfilterredir%3Dredirects&format=json");
+      + this.title.replace(" ","+") + "&bllimit=100blfilterredir%3Dredirects&format=json");
       try{
         InputStream source = new URL(url).openStream();
         Scanner scan = new Scanner(source).useDelimiter("\"title\":");
@@ -54,6 +54,10 @@ public class BackwardPage extends Page{
     return shared;
   }
   
+  public String getTitle(){
+    return title;
+  }
+  
   public ArrayList<BackwardPage> getParents(){
     return parents;
   }
@@ -69,7 +73,7 @@ public class BackwardPage extends Page{
   public String getChildPath(BackwardPage bPage){
     String result = bPage.getURL();
     
-    if(child == null){
+    if(bPage.getChild() == null){
       return result;
     }
     

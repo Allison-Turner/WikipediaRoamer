@@ -1,8 +1,8 @@
 import java.util.ArrayList;
-import java.io.InputStream;
-import java.net.URL;
+
+import java.net.*; // Java web package
 import java.util.Scanner;
-import java.io.IOException;
+import java.io.*;
 
 public class ForwardPage extends Page{
   private ArrayList<ForwardPage> children;
@@ -20,12 +20,11 @@ public class ForwardPage extends Page{
     this.parent = null;
   }
   
-  public ArrayList<ForwardPage> getChildren(){
-    return children;
-  }
-  
+  //We have to do some webscraping here to find the children
   public void retrieveFamily(){
-    String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json";
+    //String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json"; this is the one that it should be
+    /*String commandURL = "https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
+      + this.title.replace(" ","+") + "&bllimit=100blfilterredir%3Dredirects&format=json"; //this is the temporary test thing
     try{
         InputStream source = new URL(commandURL).openStream();
         Scanner scan = new Scanner(source).useDelimiter("\"title\":");
@@ -33,8 +32,7 @@ public class ForwardPage extends Page{
         while(scan.hasNext()){ 
           String child = scan.next().split("\"")[1];
           if(child.indexOf(":") == -1){
-
-            String[] wordsInTitle = child.split(" ");
+            /*String[] wordsInTitle = child.split(" ");
             String title = "";
             for(int i = 0; i < wordsInTitle.length - 1; i++){
               title += wordsInTitle + "_";
@@ -48,7 +46,32 @@ public class ForwardPage extends Page{
       catch(IOException ex){
         System.out.println(ex);
       }
-    }
+      */
+    String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
+      + this.title.replace(" ","+") + "&bllimit=100blfilterredir%3Dredirects&format=json");
+      try{
+        InputStream source = new URL(url).openStream();
+        Scanner scan = new Scanner(source).useDelimiter("\"title\":");
+        scan.next(); //skip over batch information
+        while(scan.hasNext()){ 
+          String childTitle = scan.next().split("\"")[1];
+          if(childTitle.indexOf(":") == -1){
+            children.add(new ForwardPage("https://en.wikipedia.org/wiki/"+childTitle, childTitle, this));
+          }
+        }
+      }
+      catch(IOException ex){
+        System.out.println(ex);
+      }
+  }
+  
+  public String getTitle(){
+    return title;
+  }
+  
+  public ArrayList<ForwardPage> getChildren(){
+    return children;
+  }
   
   public void setParent(ForwardPage parent){
     this.parent = parent;
@@ -59,15 +82,23 @@ public class ForwardPage extends Page{
   }
   
   public String getParentPath(ForwardPage fPage){
+    
     String result = fPage.getURL();
     
-    if(parent == null){
-      return result;
+    if (fPage.getParent() == null){
+      return fPage.getURL();
     }
     
     else{
-      return (result + "\n" + getParentPath(fPage.getParent()));
+      return (result + ", " + getParentPath(fPage.getParent()));
     }
+    
+    /*if(parent == null){
+      return "";
+    }
+    else{
+      return( parent.getTitle() + parent.getParentPath()); 
+    }*/
   }
   
   public boolean familySharesMember(BackwardPage bPage){
@@ -100,4 +131,11 @@ public class ForwardPage extends Page{
     
     return result;
   }
+  
+  public static void main(String[] args){
+      ForwardPage testPage = new ForwardPage("https://en.wikipedia.org/wiki/Amsterdam", "Amsterdam");
+      System.out.println(testPage);
+      testPage.retrieveFamily();
+      System.out.println(testPage);
+    }
 }

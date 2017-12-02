@@ -14,8 +14,9 @@ public class WikipediaGame{
   private BackwardPage endPage;
   private String path;
   
+  
   //Set the maximum depth to search (by gradually increasing until everything breaks)
-  private final int MAXDEPTH = 6;
+  private final int MAXDEPTH = 3;
   
   private Hashtable<ForwardPage, ForwardPage> forwardNodes;
   private Hashtable<BackwardPage, BackwardPage> backwardNodes;
@@ -25,12 +26,13 @@ public class WikipediaGame{
     endURL = end;
     startPage = new ForwardPage(startURL, getTitle(startURL)); 
     endPage = new BackwardPage(endURL, getTitle(endURL));
+    path = "Have yet to find a path.";
     forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
     backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
   }
   
   private String getTitle(String url){
-    return url.substring(29);
+    return url.substring(30);
   }
   
   public WikipediaGame(){
@@ -51,7 +53,7 @@ public class WikipediaGame{
   
   public String generatePath(){
     
-    String path = "Path Not Found.";
+    path = "Path Not Found.";
     
     ForwardPage front = startPage;
     BackwardPage back = endPage;
@@ -67,7 +69,9 @@ public class WikipediaGame{
         Enumeration<BackwardPage> bIter = backwardNodes.keys();
         while(bIter.hasMoreElements()){
           BackwardPage b = bIter.nextElement();
+          //System.out.println("comparing: " + f.getTitle() + " and " + b.getTitle());
           if(f.equals(b)){
+            System.out.println("comparing: " + f.getTitle() + " and " + b.getTitle());
             path = f.getParentPath(f);
             path += f.toString();
             path += b.getChildPath(b);
@@ -106,6 +110,13 @@ public class WikipediaGame{
   
   public String toString(){
     return (path);
+  }
+  
+  public static void main(String[] args){
+    WikipediaGame game = new WikipediaGame("https://en.wikipedia.org/wiki/Webkinz", "https://en.wikipedia.org/wiki/Athens");
+    System.out.println(game);
+    game.generatePath();
+    System.out.println(game);
   }
   
 }
