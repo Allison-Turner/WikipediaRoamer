@@ -1,71 +1,90 @@
+/**WikipediaGame.java
+  * @author Samantha Lincroft
+  * @modified date 12/2/17
+  * */
+
+import java.util.*; //get access to Hashtables
+
 public class WikipediaGame{
   
+  //set up the start and end URL's and the path 
   private String startURL;
   private String endURL;
-  private forwardPage startPage;
-  private backwardPage endPage;
+  private ForwardPage startPage;
+  private BackwardPage endPage;
+  private String path;
   
+  //Set the maximum depth to search (by gradually increasing until everything breaks)
   private final int MAXDEPTH = 6;
   
   private Hashtable<ForwardPage, ForwardPage> forwardNodes;
-  private Hashtable<BackwardPage, BackwardPage> backwardsNodes;
+  private Hashtable<BackwardPage, BackwardPage> backwardNodes;
   
-  public WikipediaGame(startURL, endURL){
-    startURL = startURL;
-    endURL = endURL;
-    startPage = new forwardPage(startURL);
-    endPage = new backwardPage(endURL);
+  public WikipediaGame(String start, String end){
+    startURL = start;
+    endURL = end;
+    startPage = new ForwardPage(startURL);
+    endPage = new BackwardPage(endURL);
   }
   
   public WikipediaGame(){
+    path = "Have yet to find a path.";
   }
   
   public void setStartURL(String s){
     startURL = s;
-    startPage = new forwardPage(startURL);
+    startPage = new ForwardPage(startURL);
   }
   
   public void setEndURL(String e){
     endURL = e;
-    endPage = new backwardPage(endURL);
+    endPage = new BackwardPage(endURL);
   }
   
-  public ArrayList<Page> generatePath(){
+  public String generatePath(){
     
-    ArrayList<Page> path = new ArrayList<Page>();
+    String path = "Path Not Found.";
     
-    forwardPage front = startPage;
-    backwardPage back = endPage;
-    forwardNodes.add(front);
-    backwardNodes.add(back);
-    depth = 1;
+    ForwardPage front = startPage;
+    BackwardPage back = endPage;
+    forwardNodes.put(front, front);
+    backwardNodes.put(back, back);
+    int depth = 0;
     
     while(depth<MAXDEPTH){//while we want to keep trying
       
-      for(Page f : forwardNodes){
-        for(Page b : backwardNodes){ 
-          if(f.equals(b)){ //compare every element of the forward and backward hash tables
-            path.put(f.getParentPath());
-            path.put(f);
-            path.put(b.getChildrenPath());
+      Enumeration<ForwardPage> fIter = forwardNodes.keys();
+      while(fIter.hasMoreElements()){
+        ForwardPage f = fIter.nextElement();
+        Enumeration<BackwardPage> bIter = backwardNodes.keys();
+        while(bIter.hasMoreElements()){
+          BackwardPage b = bIter.nextElement();
+          if(f.equals(b)){
+            path = f.getParentPath(f);
+            path += f.toString();
+            path += b.getChildPath(b);
             return path; //if there's a match return the path between them
           }
         }
       }
       
       //otherwise add all of the children of the forward pages to the forward hash table
-      for(Page f : forwardNodes){ 
+      fIter = forwardNodes.keys();
+      while(fIter.hasMoreElements()){
+        ForwardPage f = fIter.nextElement(); 
         f.retrieveFamily();
-        for(Page child : f.getChildren()){
-          forwardNodes.put(child);
+        for(ForwardPage child : f.getChildren()){
+          forwardNodes.put(child, child);
         }
       }
       
       //and add all of the children of the backwards pages to the backwards hash table
-      for(Page b : backwardNodes){
+      Enumeration<BackwardPage> bIter = backwardNodes.keys();
+      while(bIter.hasMoreElements()){
+        BackwardPage b = bIter.nextElement();
         b.retrieveFamily();
-        for(Page parent : b.getParents()){
-          backwardNodes.put(parent);
+        for(BackwardPage parent : b.getParents()){
+          backwardNodes.put(parent, parent);
         }
       }
       
@@ -78,7 +97,7 @@ public class WikipediaGame{
   }
   
   public String toString(){
-    return ("the current state of the game");
+    return (path);
   }
   
 }
