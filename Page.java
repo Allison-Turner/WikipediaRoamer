@@ -22,6 +22,5 @@ public abstract class Page{
     }
   }
   
-  public void retrieveFamily();
-  public boolean familySharesMember(Page page);
+  public abstract void retrieveFamily();
 }
