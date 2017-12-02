@@ -21,8 +21,31 @@ public class ForwardPage extends Page{
     
   }
   
-  public ArrayList<ForwardPage> getChildren(){
-    return children;
+  public void retrieveFamily(){
+    String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json";
+    try{
+        InputStream source = new URL(commandURL).openStream();
+        Scanner scan = new Scanner(source).useDelimiter("\"title\":");
+        scan.next(); //skip over batch information
+        while(scan.hasNext()){ 
+          String child = scan.next().split("\"")[1];
+          if(child.indexOf(":") == -1){
+
+            String[] wordsInTitle = child.split(" ");
+            String title = "";
+            for(int i = 0; i < wordsInTitle.length - 1; i++){
+              title += wordsInTitle + "_";
+            }
+            title += wordsInTitle[wordsInTitle - 1];
+              
+            children.add(new ForwardPage(("https://en.wikipedia.org/wiki/" + title), child, this));
+          }
+        }
+      }
+      catch(IOException ex){
+        System.out.println(ex);
+      }
+    }
   }
   
   public void setParent(ForwardPage parent){
