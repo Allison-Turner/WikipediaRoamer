@@ -1,8 +1,10 @@
 public abstract class Page{
   private String url;
+  protected String title;
   
-  public Page(String url){
+  public Page(String url, String title){
     this.url = url;
+    this.title = title;
   }
   
   public String getURL(){

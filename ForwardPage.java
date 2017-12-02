@@ -4,20 +4,21 @@ public class ForwardPage extends Page{
   private ArrayList<ForwardPage> children;
   private ForwardPage parent;
   
-  public ForwardPage(String url, ForwardPage parent){
-    super(url);
+  public ForwardPage(String url, String title, ForwardPage parent){
+    super(url, title);
     children = new ArrayList<ForwardPage>();
     this.parent = parent;
   }
   
-  public ForwardPage(String url){
-    super(url);
+  public ForwardPage(String url, String title){
+    super(url, title);
     children = new ArrayList<ForwardPage>();
     this.parent = null;
   }
   
   //We have to do some webscraping here to find the children
   public void retrieveFamily(){
+    
   }
   
   public ArrayList<ForwardPage> getChildren(){
@@ -33,14 +34,14 @@ public class ForwardPage extends Page{
   }
   
   public String getParentPath(ForwardPage fPage){
-    String result = this.getURL();
+    String result = fPage.getURL();
     
     if(parent == null){
       return result;
     }
     
     else{
-      return (result + "\n" + getParentPath(this.getParent()));
+      return (result + "\n" + getParentPath(fPage.getParent()));
     }
   }
   

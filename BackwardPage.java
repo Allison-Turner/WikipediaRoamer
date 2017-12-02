@@ -1,23 +1,43 @@
 import java.util.ArrayList;
 
+import java.net.*; // Java web package
+import java.util.Scanner;
+import java.io.*;
+
 public class BackwardPage extends Page{
   private ArrayList<BackwardPage> parents;
   private BackwardPage child;
   
-  public BackwardPage(String url, BackwardPage child){
-    super(url);
+  public BackwardPage(String url, String title, BackwardPage child){
+    super(url, title);
     this.child = child;
     parents = new ArrayList<BackwardPage>();
   }
   
-  public BackwardPage(String url){
-    super(url);
+  public BackwardPage(String url, String title){
+    super(url, title);
     this.child = null;
     parents = new ArrayList<BackwardPage>();
   }
   
   //Webscraping wooo
   public void retrieveFamily(){
+    String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
+      + this.title.replace(" ","+") + "&bllimit=25blfilterredir%3Dredirects&format=json");
+      try{
+        InputStream source = new URL(url).openStream();
+        Scanner scan = new Scanner(source).useDelimiter("\"title\":");
+        scan.next(); //skip over batch information
+        while(scan.hasNext()){ 
+          String parentTitle = scan.next().split("\"")[1];
+          if(parentTitle.indexOf(":") == -1){
+            parents.add(new BackwardPage("https://en.wikipedia.org/wiki/"+parentTitle, parentTitle, this));
+          }
+        }
+      }
+      catch(IOException ex){
+        System.out.println(ex);
+      }
   }
   
   public boolean familySharesMember(ForwardPage fPage){//Argue about design choices later
@@ -47,19 +67,20 @@ public class BackwardPage extends Page{
   }
   
   public String getChildPath(BackwardPage bPage){
-    String result = this.getURL();
+    String result = bPage.getURL();
     
     if(child == null){
       return result;
     }
     
     else{
-      return (result + "\n" + getChildPath(this.getChild()));
+      return (result + "\n" + getChildPath(bPage.getChild()));
     }
   }
     
     public String toString(){
     String result = "This Page's URL: " + this.getURL();
+    result += ("This Page's Title: " + title);
     
     if(child != null){
       result += "\nThis Page's Child's URL: "+ child.getURL();
@@ -74,4 +95,11 @@ public class BackwardPage extends Page{
     
     return result;
   }
+    
+    public static void main(String[] args){
+      BackwardPage testPage = new BackwardPage("https://en.wikipedia.org/wiki/Amsterdam", "Amsterdam");
+      System.out.println(testPage);
+      testPage.retrieveFamily();
+      System.out.println(testPage);
+    }
 }

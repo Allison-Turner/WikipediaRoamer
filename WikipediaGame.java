@@ -23,31 +23,31 @@ public class WikipediaGame{
   public WikipediaGame(String start, String end){
     startURL = start;
     endURL = end;
-    startPage = new ForwardPage(startURL);
-    endPage = new BackwardPage(endURL);
-    forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
-    backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
+    startPage = new ForwardPage(startURL, getTitle(startURL)); 
+    endPage = new BackwardPage(endURL, getTitle(endURL));
+  }
+  
+  private String getTitle(String url){
+    return url.substring(29);
   }
   
   public WikipediaGame(){
     path = "Have yet to find a path.";
-    forwardNodes = new Hashtable<ForwardPage, ForwardPage>();
-    backwardNodes = new Hashtable<BackwardPage, BackwardPage>();
   }
   
   public void setStartURL(String s){
     startURL = s;
-    startPage = new ForwardPage(startURL);
+    startPage = new ForwardPage(startURL, getTitle(startURL));
   }
   
   public void setEndURL(String e){
     endURL = e;
-    endPage = new BackwardPage(endURL);
+    endPage = new BackwardPage(endURL, getTitle(endURL));
   }
   
   public String generatePath(){
     
-    path = "Path Not Found.";
+    String path = "Path Not Found.";
     
     ForwardPage front = startPage;
     BackwardPage back = endPage;
