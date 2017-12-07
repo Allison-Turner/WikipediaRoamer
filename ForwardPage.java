@@ -7,21 +7,25 @@ import java.io.*;
 public class ForwardPage extends Page{
   private ArrayList<ForwardPage> children;
   private ForwardPage parent;
+  private boolean retrievedFamily;
   
   public ForwardPage(String url, String title, ForwardPage parent){
     super(url, title);
     children = new ArrayList<ForwardPage>();
     this.parent = parent;
+    retrievedFamily = false;
   }
   
   public ForwardPage(String url, String title){
     super(url, title);
     children = new ArrayList<ForwardPage>();
     this.parent = null;
+    retrievedFamily = false;
   }
   
   //We have to do some webscraping here to find the children
   public void retrieveFamily(){
+    if(!retrievedFamily){
     //String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json"; this is the one that it should be
     String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
       + this.title.replace(" ","+") + "&bllimit=" + CHILDLIMIT + "blfilterredir%3Dredirects&format=json");
@@ -39,6 +43,8 @@ public class ForwardPage extends Page{
       catch(IOException ex){
         System.out.println(ex);
       }
+      retrievedFamily = true;
+    }
   }
   
   public String getTitle(){
@@ -92,9 +98,9 @@ public class ForwardPage extends Page{
     }
     
     if(children.size() > 0){
-      result += "\nThis Page's Children's URLs:\n";
+      result += "\nThis Page's Children\n";
       for(int i = 0; i < children.size(); i++){
-        result += children.get(i).getURL() + "\n";
+        result += children.get(i).getTitle() + "\n";
       }
     }
     

@@ -7,23 +7,27 @@ import java.io.*;
 public class BackwardPage extends Page{
   private ArrayList<BackwardPage> parents;
   private BackwardPage child;
+  private boolean retrievedFamily;
   
   public BackwardPage(String url, String title, BackwardPage child){
     super(url, title);
     this.child = child;
     parents = new ArrayList<BackwardPage>();
+    retrievedFamily = false;
   }
   
   public BackwardPage(String url, String title){
     super(url, title);
     this.child = null;
     parents = new ArrayList<BackwardPage>();
+    retrievedFamily = false;
   }
   
   //Webscraping wooo
   public void retrieveFamily(){
-    String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
-      + this.title.replace(" ","+") + "&bllimit=" + CHILDLIMIT + "blfilterredir%3Dredirects&format=json");
+    if(!retrievedFamily){
+      String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
+                      + this.title.replace(" ","+") + "&bllimit=" + CHILDLIMIT + "blfilterredir%3Dredirects&format=json");
       try{
         InputStream source = new URL(url).openStream();
         Scanner scan = new Scanner(source).useDelimiter("\"title\":");
@@ -38,6 +42,8 @@ public class BackwardPage extends Page{
       catch(IOException ex){
         System.out.println(ex);
       }
+      retrievedFamily = true;
+    }
   }
   
   public boolean familySharesMember(ForwardPage fPage){//Argue about design choices later
@@ -91,9 +97,9 @@ public class BackwardPage extends Page{
     }
     
     if(parents.size() > 0){
-      result += "\nThis Page's Parent's URLs:\n";
+      result += "\nThis Page's Parent's\n";
       for(int i = 0; i < parents.size(); i++){
-        result += parents.get(i).getURL() + "\n";
+        result += parents.get(i).getTitle() + "\n";
       }
     }
     

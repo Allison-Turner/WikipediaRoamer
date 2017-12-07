@@ -1,7 +1,7 @@
 public abstract class Page{
   private String url;
   protected String title;
-  protected final int CHILDLIMIT = 10;
+  protected final int CHILDLIMIT = 30;
   
   public Page(String url, String title){
     this.url = url;
