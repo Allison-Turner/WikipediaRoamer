@@ -87,12 +87,13 @@ public class WikipediaGamePanel extends JPanel{
     public void actionPerformed (ActionEvent event) {
       
       try{
-        //REMEMBER TO CHANGE THIS!!!! (THE STARTURL VS THE END URL)
-        game.setEndURL(startURLInput.getText());
-        game.setStartURL(endURLInput.getText());
+        //this doesnt work
+        pathDisplay.setText("Traversing the interwebs...");
+        game.setEndURL(endURLInput.getText());
+        game.setStartURL(startURLInput.getText());
         game.generatePath();
         pathDisplay.setText(game.toString());
-        //resetting size of jpanel to accomodate the game.toString()
+        //resetting size of jpanel to accomodate the game.toString() (also doesn't work)
         Dimension dimension = WikipediaGamePanel.this.getPreferredSize();
         WikipediaGamePanel.this.setPreferredSize(dimension);
       }
