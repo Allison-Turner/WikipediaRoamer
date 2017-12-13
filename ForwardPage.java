@@ -23,7 +23,7 @@ public class ForwardPage extends Page{
     retrievedFamily = false;
   }
   
-  //We have to do some webscraping here to find the children
+  /*//We have to do some webscraping here to find the children
   public void retrieveFamily(){
     if(!retrievedFamily){
     //String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json"; this is the one that it should be
@@ -36,6 +36,28 @@ public class ForwardPage extends Page{
         while(scan.hasNext()){ 
           String childTitle = scan.next().split("\"")[1];
           if(childTitle.indexOf(":") == -1){
+            children.add(new ForwardPage("https://en.wikipedia.org/wiki/"+childTitle, childTitle, this));
+          }
+        }
+      }
+      catch(IOException ex){
+        System.out.println(ex);
+      }
+      retrievedFamily = true;
+    }
+  }*/
+  
+  public void retrieveFamily(){
+    if(!retrievedFamily){
+    //String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json"; this is the one that it should be
+    String url = ("https://en.wikipedia.org/w/api.php?action=query&titles=" + this.title.replace(" ","+") + "&prop=links&pllimit=" + CHILDLIMIT + "&format=json");
+      try{
+        InputStream source = new URL(url).openStream();
+        Scanner scan = new Scanner(source).useDelimiter("\"title\":");
+        scan.next(); //skip over batch information
+        while(scan.hasNext()){ 
+          String childTitle = scan.next().split("\"")[1];
+          if(childTitle.indexOf(":") == -1 && childTitle.indexOf("\\") == -1){
             children.add(new ForwardPage("https://en.wikipedia.org/wiki/"+childTitle, childTitle, this));
           }
         }
@@ -112,5 +134,6 @@ public class ForwardPage extends Page{
       System.out.println(testPage);
       testPage.retrieveFamily();
       System.out.println(testPage);
+      System.out.println(testPage.getImageURL());
     }
 }

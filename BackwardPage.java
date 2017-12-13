@@ -34,7 +34,7 @@ public class BackwardPage extends Page{
         scan.next(); //skip over batch information
         while(scan.hasNext()){ 
           String parentTitle = scan.next().split("\"")[1];
-          if(parentTitle.indexOf(":") == -1){
+          if(parentTitle.indexOf(":") == -1 && parentTitle.indexOf("\\") == -1){
             parents.add(new BackwardPage("https://en.wikipedia.org/wiki/"+parentTitle, parentTitle, this));
           }
         }
@@ -45,6 +45,8 @@ public class BackwardPage extends Page{
       retrievedFamily = true;
     }
   }
+  
+  
   
   public boolean familySharesMember(ForwardPage fPage){//Argue about design choices later
     ArrayList<ForwardPage> children = fPage.getChildren();

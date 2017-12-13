@@ -51,6 +51,16 @@ public class WikipediaGame{
     endPage = new BackwardPage(endURL, getTitle(endURL));
   }
   
+  public void setStartTerm(String s){
+    startURL = "https://en.wikipedia.org/wiki/" + s;
+    startPage = new ForwardPage(startURL, s);
+  }
+  
+  public void setEndTerm(String e){
+    endURL = "https://en.wikipedia.org/wiki/" + e;
+    endPage = new BackwardPage(endURL, e);
+  }
+  
   public String generatePath(){ //updated version O(nCHILDLIMIT^n)
     
     path = "Path Not Found.";
@@ -63,21 +73,23 @@ public class WikipediaGame{
     
     while(depth<MAXDEPTH){//while we want to keep trying
       
-      Enumeration<String> fIter = forwardNodes.keys();
-      while(fIter.hasMoreElements()){
-        String title = fIter.nextElement();
-        if(backwardNodes.containsKey(title)){
+      Enumeration<String> bIter = backwardNodes.keys();
+      while(bIter.hasMoreElements()){ //go through all the forward nodes
+        String title = bIter.nextElement();
+        System.out.println("checking: " + title);
+        path = ("checking: " + title);
+        if(forwardNodes.containsKey(title)){ //if a forward node is contained in backwardNodes we've got it!
           BackwardPage b = backwardNodes.get(title);
           ForwardPage f = forwardNodes.get(title);
           System.out.println("comparing: " + f.getTitle() + " and " + b.getTitle());
           path = f.getParentPath(f);
           path += b.getChildPath(b).substring(title.length()); //substring removes duplicate "linking element"
-          return path; //if there's a match return the path between them
+          return path; //return the path between them
         }
       }
       
       //otherwise add all of the children of the forward pages to the forward hash table
-      fIter = forwardNodes.keys();
+      Enumeration<String> fIter = forwardNodes.keys();
       while(fIter.hasMoreElements()){
         ForwardPage f = forwardNodes.get(fIter.nextElement()); 
         f.retrieveFamily();
@@ -88,7 +100,7 @@ public class WikipediaGame{
       }
       
       //and add all of the children of the backwards pages to the backwards hash table
-      Enumeration<String> bIter = backwardNodes.keys();
+      bIter = backwardNodes.keys();
       while(bIter.hasMoreElements()){
         BackwardPage b = backwardNodes.get(bIter.nextElement());
         b.retrieveFamily();
@@ -103,7 +115,9 @@ public class WikipediaGame{
       depth++;
     }
     
-    System.out.println("sorry, we could not find a path between your given nodes");
+    //if we gave up before finding anything... :(
+    System.out.println("sorry, we could not find a path between your given nodes *sad*");
+    path = "sorry, we could not find a path between your given nodes *sad*";
     return null; //return null if no path was found
   }
   
@@ -113,7 +127,7 @@ public class WikipediaGame{
   }
   
   public static void main(String[] args){
-    WikipediaGame game = new WikipediaGame("https://en.wikipedia.org/wiki/Webkinz", "https://en.wikipedia.org/wiki/Nuclear_Wepond");
+    WikipediaGame game = new WikipediaGame("https://en.wikipedia.org/wiki/Webkinz", "https://en.wikipedia.org/wiki/Lamp");
     System.out.println(game);
     game.generatePath();
     System.out.println(game);
