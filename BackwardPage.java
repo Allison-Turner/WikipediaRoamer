@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 import java.net.*; // Java web package
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 
 public class BackwardPage extends Page{
@@ -78,7 +78,7 @@ public class BackwardPage extends Page{
     return child;
   }
   
-  public String getChildPath(BackwardPage bPage){
+ /* public String getChildPath(BackwardPage bPage){
     String result = bPage.getTitle();
     
     if(bPage.getChild() == null){
@@ -88,9 +88,20 @@ public class BackwardPage extends Page{
     else{
       return (result + ", " + getChildPath(bPage.getChild()));
     }
+  }*/
+  
+  public LinkedList<Page> getChildPath(BackwardPage bPage){
+    LinkedList<Page> result = new LinkedList<Page>();
+    if(bPage.getChild() == null){
+      result.add(bPage);
+      return result;
+    }
+    result = getChildPath(bPage.getChild());
+    result.addFirst(bPage);
+    return result;
   }
     
-    public String toString(){
+    /*public String toString(){
     String result = "This Page's URL: " + this.getURL();
     result += ("This Page's Title: " + title);
     
@@ -106,7 +117,7 @@ public class BackwardPage extends Page{
     }
     
     return result;
-  }
+  }*/
     
     public static void main(String[] args){
       BackwardPage testPage = new BackwardPage("https://en.wikipedia.org/wiki/Amsterdam", "Amsterdam");

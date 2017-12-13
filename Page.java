@@ -49,5 +49,9 @@ public abstract class Page{
     return imageURL;
   }
   
+  public String toString(){
+    return title;
+  }
+  
   public abstract void retrieveFamily();
 }

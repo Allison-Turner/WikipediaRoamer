@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 import java.net.*; // Java web package
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 
 public class ForwardPage extends Page{
@@ -22,30 +22,6 @@ public class ForwardPage extends Page{
     this.parent = null;
     retrievedFamily = false;
   }
-  
-  /*//We have to do some webscraping here to find the children
-  public void retrieveFamily(){
-    if(!retrievedFamily){
-    //String commandURL = "https://www.mediawiki.org/w/api.php?action=query&prop=links&titles=" + title + "&format=json"; this is the one that it should be
-    String url = ("https://en.wikipedia.org/w/api.php?action=query&list=backlinks&ns=0&bltitle=" 
-      + this.title.replace(" ","+") + "&bllimit=" + CHILDLIMIT + "blfilterredir%3Dredirects&format=json");
-      try{
-        InputStream source = new URL(url).openStream();
-        Scanner scan = new Scanner(source).useDelimiter("\"title\":");
-        scan.next(); //skip over batch information
-        while(scan.hasNext()){ 
-          String childTitle = scan.next().split("\"")[1];
-          if(childTitle.indexOf(":") == -1){
-            children.add(new ForwardPage("https://en.wikipedia.org/wiki/"+childTitle, childTitle, this));
-          }
-        }
-      }
-      catch(IOException ex){
-        System.out.println(ex);
-      }
-      retrievedFamily = true;
-    }
-  }*/
   
   public void retrieveFamily(){
     if(!retrievedFamily){
@@ -85,7 +61,7 @@ public class ForwardPage extends Page{
     return parent;
   }
   
-  public String getParentPath(ForwardPage fPage){
+  /*public String getParentPath(ForwardPage fPage){
     
     String result = fPage.getTitle();
     
@@ -96,7 +72,20 @@ public class ForwardPage extends Page{
     else{
       return (getParentPath(fPage.getParent()) + ", " + result);
     }
+  }*/
+  
+  public LinkedList<Page> getParentPath(ForwardPage fPage){
+    LinkedList<Page> result = new LinkedList<Page>();
+    if(fPage.getParent() == null){
+      result.add(fPage);
+      return result;
+    }
+    result = getParentPath(fPage.getParent());
+    result.add(fPage);
+    return result;
   }
+  
+  
   
   public boolean familySharesMember(BackwardPage bPage){
     ArrayList<BackwardPage> parents = bPage.getParents();
@@ -112,7 +101,7 @@ public class ForwardPage extends Page{
     return shared;
   }
   
-  public String toString(){
+  /*public String toString(){
     String result = "This Page's URL: " + this.getURL();
     
     if(parent != null){
@@ -127,7 +116,7 @@ public class ForwardPage extends Page{
     }
     
     return result;
-  }
+  }*/
   
   public static void main(String[] args){
       ForwardPage testPage = new ForwardPage("https://en.wikipedia.org/wiki/Amsterdam", "Amsterdam");

@@ -12,7 +12,7 @@ public class WikipediaGame{
   private String endURL;
   private ForwardPage startPage;
   private BackwardPage endPage;
-  private String path;
+  private LinkedList<Page> path;
   
   
   //Set the maximum depth to search (by gradually increasing until everything breaks)
@@ -26,7 +26,6 @@ public class WikipediaGame{
     endURL = end;
     startPage = new ForwardPage(startURL, getTitle(startURL)); 
     endPage = new BackwardPage(endURL, getTitle(endURL));
-    path = "Have yet to find a path.";
     forwardNodes = new Hashtable<String, ForwardPage>();
     backwardNodes = new Hashtable<String, BackwardPage>();
   }
@@ -36,7 +35,6 @@ public class WikipediaGame{
   }
   
   public WikipediaGame(){
-    path = "Have yet to find a path.";
     forwardNodes = new Hashtable<String, ForwardPage>();
     backwardNodes = new Hashtable<String, BackwardPage>();
   }
@@ -61,9 +59,10 @@ public class WikipediaGame{
     endPage = new BackwardPage(endURL, e);
   }
   
-  public String generatePath(){ //updated version O(nCHILDLIMIT^n)
+  public LinkedList<Page> generatePath(){ //updated version O(nCHILDLIMIT^n)
     
-    path = "Path Not Found.";
+    //path = "Path Not Found.";
+    path = new LinkedList<Page>();
     
     ForwardPage front = startPage;
     BackwardPage back = endPage;
@@ -77,13 +76,14 @@ public class WikipediaGame{
       while(bIter.hasMoreElements()){ //go through all the forward nodes
         String title = bIter.nextElement();
         System.out.println("checking: " + title);
-        path = ("checking: " + title);
         if(forwardNodes.containsKey(title)){ //if a forward node is contained in backwardNodes we've got it!
           BackwardPage b = backwardNodes.get(title);
           ForwardPage f = forwardNodes.get(title);
           System.out.println("comparing: " + f.getTitle() + " and " + b.getTitle());
           path = f.getParentPath(f);
-          path += b.getChildPath(b).substring(title.length()); //substring removes duplicate "linking element"
+          path.removeLast();
+          path.addAll(b.getChildPath(b));
+          
           return path; //return the path between them
         }
       }
@@ -117,19 +117,21 @@ public class WikipediaGame{
     
     //if we gave up before finding anything... :(
     System.out.println("sorry, we could not find a path between your given nodes *sad*");
-    path = "sorry, we could not find a path between your given nodes *sad*";
     return null; //return null if no path was found
   }
   
   
   public String toString(){
-    return (path);
+    if(path == null){
+      return("sorry we don't have a path yet");
+    }
+    return (path.toString());
   }
   
   public static void main(String[] args){
-    WikipediaGame game = new WikipediaGame("https://en.wikipedia.org/wiki/Webkinz", "https://en.wikipedia.org/wiki/Lamp");
+    WikipediaGame game = new WikipediaGame("https://en.wikipedia.org/wiki/Webkinz", "https://en.wikipedia.org/wiki/Dolphin");
     System.out.println(game);
-    game.generatePath();
+    System.out.println(game.generatePath());
     System.out.println(game);
   }
   
