@@ -1,6 +1,6 @@
 
 /* Public class ResultPanel.java
- * 
+ * NOT BEING USED AS OF 12/13/17 @ 8:54PM
  */
 import java.awt.*;
 import java.awt.event.*;
