@@ -12,7 +12,7 @@ public abstract class Page{
   //Defining the class variables and initializing the maximum number of children
   private String url;
   protected String title;
-  protected final int CHILDLIMIT = 100;
+  protected final int CHILDLIMIT = 30;
   
   /* Constructor, only comes as a two parameter constructor because a page without a title and url is useless
    *@param String url is the URL of the web page
