@@ -25,6 +25,7 @@ public class WikipediaGameGUI{
   private static JTextField startURLInput;
   private static JTextField endURLInput;
   private static WikipediaGame newGame;
+  private static Component results;
   
   /*
    *Builds the JFrame and all JPanels that will be displayed in the JFrame, then makes it visible 
@@ -52,7 +53,7 @@ public class WikipediaGameGUI{
     cards.addLayoutComponent(interactions, "Interaction Panel");
     
     //Create a new result panel and add it to the list of panels that CardLayout knows about
-    Component results = makeResultPanel();
+    results = makeResultPanel();
     cards.addLayoutComponent(results, "Results Panel");
     
     //Making sure the overarching JPanel knows about the JPanels that CardLayout will be switching between
@@ -264,6 +265,7 @@ public class WikipediaGameGUI{
         newGame.setStartTerm(startURLInput.getText());
         newGame.generatePath();
         System.out.println(newGame);
+        results = makeResultPanel();
         cards.show(innerFrame, "Results Panel");
       }
       
