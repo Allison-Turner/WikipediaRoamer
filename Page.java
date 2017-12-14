@@ -71,7 +71,7 @@ public abstract class Page{
    *@return String URL of the page's first image 
    */
   public String getImageURL(){
-    String query = ("https://en.wikipedia.org/w/api.php?action=query&titles=" + title.replace(" ", " +") + "&prop=pageimages&format=json&pithumbsize=100");
+    String query = ("https://en.wikipedia.org/w/api.php?action=query&titles=" + title.replace(" ", "+") + "&prop=pageimages&format=json&pithumbsize=100");
     String imageURL = "";
     try{
         InputStream source = new URL(query).openStream();
