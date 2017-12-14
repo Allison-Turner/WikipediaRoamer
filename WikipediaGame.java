@@ -120,6 +120,9 @@ public class WikipediaGame{
     return null; //return null if no path was found
   }
   
+  public LinkedList<Page> getPath(){
+    return path;
+  }
   
   public String toString(){
     if(path == null){
