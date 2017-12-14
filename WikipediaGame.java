@@ -50,13 +50,15 @@ public class WikipediaGame{
   }
   
   public void setStartTerm(String s){
-    startURL = "https://en.wikipedia.org/wiki/" + s;
-    startPage = new ForwardPage(startURL, s);
+    String newS = s.replace(" ", "+");
+    startURL = "https://en.wikipedia.org/wiki/" + newS;
+    startPage = new ForwardPage(startURL, newS);
   }
   
   public void setEndTerm(String e){
-    endURL = "https://en.wikipedia.org/wiki/" + e;
-    endPage = new BackwardPage(endURL, e);
+    String newE = e.replace(" ", "+");
+    endURL = "https://en.wikipedia.org/wiki/" + newE;
+    endPage = new BackwardPage(endURL, newE);
   }
   
   public LinkedList<Page> generatePath(){ //updated version O(nCHILDLIMIT^n)
