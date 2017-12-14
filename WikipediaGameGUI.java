@@ -8,9 +8,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.net.URL;
 import java.io.IOException;
 import java.util.*;
+import java.net.URL;
 
 public class WikipediaGameGUI{
   //Initializing all class variables. Some of these class variables usually are stored in separate JPanel child classes, but because the CardLayout requires access to the event listeners of certain buttons, the panels have to be created in this
@@ -26,6 +26,10 @@ public class WikipediaGameGUI{
   private static JTextField endURLInput;
   private static WikipediaGame newGame;
   private static Component results;
+  private static final Color backgroundColor = new Color(155, 130, 189);
+  private static final Color textColor = new Color(240, 240, 240);
+  private static final Font headerFont = new Font("Serif", Font.BOLD, 48);
+  private static final Font textFont = new Font("Serif", Font.BOLD, 20);
   
   /*
    *Builds the JFrame and all JPanels that will be displayed in the JFrame, then makes it visible 
@@ -63,8 +67,12 @@ public class WikipediaGameGUI{
     innerFrame.add(results);
     
     //Finish up the JFrame and then make it visible and usable
-    frame.getContentPane().add(innerFrame);
+    Container c = frame.getContentPane();
+    Dimension d = new Dimension(1000,400);
+    c.setPreferredSize(d);
+    c.add(innerFrame);
     frame.pack();
+    frame.setResizable(false);
     frame.setPreferredSize(frame.getPreferredSize());
     frame.setVisible(true);
   }
@@ -74,20 +82,31 @@ public class WikipediaGameGUI{
    */
   private static Component makeMenuPanel(){
     //Create an empty JPanel and set the layout style to FlowLayout and make it blue
-    JPanel result = new JPanel(new FlowLayout());
-    result.setBackground(Color.blue);
+    JPanel result = new JPanel(new BorderLayout());
+    result.setBackground(backgroundColor);
+    
+    JLabel name = new JLabel();
+    name.setText("The Wikipedia Game");
+    name.setForeground(textColor);
+    name.setFont(headerFont);
+    result.add(name, BorderLayout.PAGE_START);
+    
+    JPanel result2 = new JPanel(new FlowLayout());
     
     //Create the button to switch to the instruction JPanel and create its event listener
     seeInstructions = new JButton("See Instructions");
     ButtonListener listener = new ButtonListener();
     seeInstructions.addActionListener(listener); 
-    result.add(seeInstructions);
+    result2.add(seeInstructions);
     
     //Create the button to switch to the game play JPanel and create its event listener
     playGame = new JButton("Play Game");
     ButtonListener listener2 = new ButtonListener();
     playGame.addActionListener(listener2);
-    result.add(playGame);
+    result2.add(playGame);
+    result2.setBackground(backgroundColor);
+    
+    result.add(result2, BorderLayout.CENTER);
     
     //Return the menu JPanel
     return result;
@@ -99,18 +118,22 @@ public class WikipediaGameGUI{
   private static Component makeInstructionPanel(){
     //Create an empty JPanel
     JPanel result = new JPanel();
+    result.setBackground(backgroundColor);
     
     //Adding the section to explain what the game is
     JLabel whatIsGameLabel = new JLabel("What Is The Wikipedia Game?");
-    JTextArea whatIsGameText = new JTextArea(whatIsGameText());
-    whatIsGameText.setEditable(false);
+    JLabel whatIsGameText = new JLabel(whatIsGameText());
+    whatIsGameText.setForeground(textColor);
+    whatIsGameText.setFont(headerFont);
+    //whatIsGameText.setEditable(false);
     result.add(whatIsGameLabel);
     result.add(whatIsGameText);
     
     //Adding the section to explain how to play
     JLabel instructionLabel = new JLabel("How to Play");
-    JTextArea instructionText = new JTextArea(instructionText());
-    instructionText.setEditable(false);
+    JLabel instructionText = new JLabel(instructionText());
+    instructionText.setForeground(textColor);
+    //instructionText.setEditable(false);
     result.add(instructionLabel);
     result.add(instructionText);
     
@@ -146,7 +169,7 @@ public class WikipediaGameGUI{
     //Create an empty JPanel and set layout manager to BorderLayout
     JPanel result = new JPanel();
     result.setLayout(new BorderLayout(10, 10));
-    result.setBackground(Color.blue);
+    result.setBackground(backgroundColor);
     
     //Add subpanels containing elements for gameplay and for description
     result.add(userInputPanel(), BorderLayout.CENTER);
@@ -164,9 +187,11 @@ public class WikipediaGameGUI{
     //Create new JPanel and set to flow layout
     JPanel result = new JPanel();
     result.setLayout(new FlowLayout());
+    result.setBackground(backgroundColor);
     
     //Start URL label and field added
-    JLabel startURLLabel = new JLabel("Starting URL: ");
+    JLabel startURLLabel = new JLabel("Starting Title: ");
+    startURLLabel.setForeground(textColor);
     result.add(startURLLabel);
     
     startURLInput = new JTextField();
@@ -174,7 +199,8 @@ public class WikipediaGameGUI{
     result.add(startURLInput);
     
     //End URL label and field added
-    JLabel endURLLabel = new JLabel("Ending URL: ");
+    JLabel endURLLabel = new JLabel("Ending Title: ");
+    endURLLabel.setForeground(textColor);
     result.add(endURLLabel);
     
     endURLInput = new JTextField();
@@ -195,7 +221,9 @@ public class WikipediaGameGUI{
    * */
   private static JPanel descriptionPanel(){
     JPanel result = new JPanel();
+    result.setBackground(backgroundColor);
     JLabel description = new JLabel("Enter a starting URL and ending URL on Wikipedia and press Get Path!");
+    description.setForeground(textColor);
     result.add(description);
     return result;
   }
@@ -206,18 +234,14 @@ public class WikipediaGameGUI{
   private static Component makeResultPanel(){
     //Create new JPanel
     JPanel result = new JPanel();
-    try{
       LinkedList<Page> path = newGame.getPath();
-      result.setLayout(new GridLayout(path.size(),1));
+      result.setLayout(new FlowLayout());
       
       //Generate an itemPanel for each page in the path
-      while(!path.isEmpty()){
+      while(path != null && !path.isEmpty()){
         JPanel item = itemPanel(path.remove());
         result.add(item);
       }
-    }catch(NullPointerException ex){
-      System.out.println("have yet to retrieve path");
-    }
     //Add a play again button to take you back to the interactions panel
     playAgainButton = new JButton("Play Again");
     playAgainButton.addActionListener(new ButtonListener());
