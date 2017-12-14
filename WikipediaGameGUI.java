@@ -211,7 +211,7 @@ public class WikipediaGameGUI{
     
     //Generate an itemPanel for each page in the path
     LinkedList<Page> path = newGame.getPath();
-    while(path != null){
+    while(path != null && !path.isEmpty()){
       result.add(itemPanel(path.remove()));
     }
     
