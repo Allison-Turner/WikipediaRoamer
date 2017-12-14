@@ -8,7 +8,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.io.File;
+import java.net.URL;
 import java.io.IOException;
 import java.util.*;
 
@@ -206,15 +206,18 @@ public class WikipediaGameGUI{
   private static Component makeResultPanel(){
     //Create new JPanel
     JPanel result = new JPanel();
-    result.setLayout(new FlowLayout());
-    result.setBackground(Color.blue);
-    
-    //Generate an itemPanel for each page in the path
-    LinkedList<Page> path = newGame.getPath();
-    while(path != null && !path.isEmpty()){
-      result.add(itemPanel(path.remove()));
+    try{
+      LinkedList<Page> path = newGame.getPath();
+      result.setLayout(new GridLayout(path.size(),1));
+      
+      //Generate an itemPanel for each page in the path
+      while(!path.isEmpty()){
+        JPanel item = itemPanel(path.remove());
+        result.add(item);
+      }
+    }catch(NullPointerException ex){
+      System.out.println("have yet to retrieve path");
     }
-    
     //Add a play again button to take you back to the interactions panel
     playAgainButton = new JButton("Play Again");
     playAgainButton.addActionListener(new ButtonListener());
@@ -224,64 +227,54 @@ public class WikipediaGameGUI{
     return result;
   }
   
-  /*Creates a sub-JPanel that contains a page's title and the first image on the page for display of the path
-   * @return the item JPanel
+  /*
+   * 
    */
    private static JPanel itemPanel(Page p){
-    //Create a new JPanel and set layout to flow 
+    System.out.println("making an item panel out of " + p);
     JPanel myItemPanel = new JPanel();
     myItemPanel.setLayout(new FlowLayout());
-     
-    //Retrieve the image from Wikipedia
     try{
-      BufferedImage myPicture = ImageIO.read(new File(p.getImageURL()));
+      BufferedImage myPicture = ImageIO.read(new URL(p.getImageURL()));
       JLabel picLabel = new JLabel(new ImageIcon(myPicture));
       myItemPanel.add(picLabel);
-    }
-     //Print any exceptions
-     catch(IOException ex){
+    }catch(IOException ex){
       System.out.println(ex);
     }
-    //Add the new Image to a JLabel
     myItemPanel.add(new JLabel(p.toString()));
-     
-    //Return the item JPanel
     return myItemPanel;
   }
   
    /*
-    *Private inner class to handle all button clicks accordingly 
+    * 
     */
   private static class ButtonListener implements ActionListener{
     public void actionPerformed (ActionEvent event) {
       
-      //If the main menu button seeInstructions is clicked switch the displayed card to the instruction panel
       if (event.getSource() == seeInstructions){
         System.out.println("See instructions clicked!!!");
         cards.show(innerFrame, "Instruction Panel");
       }
       
-      //If the main menu button playGame is clicked switch the displayed card to the interactions panel
       else if (event.getSource() == playGame){
         cards.show(innerFrame, "Interaction Panel");
       }
       
-      //If the instruction panel button seeMainMenu is clicked switch the displayed card to the main menu panel
       else if(event.getSource() == seeMainMenu){
         cards.show(innerFrame, "Menu Panel");
       }
       
-      //If the interactions panel button getPath is clicked generate the path and switch to the result panel
       else if(event.getSource() == getPathButton){
         newGame.setEndTerm(endURLInput.getText());
         newGame.setStartTerm(startURLInput.getText());
         newGame.generatePath();
         System.out.println(newGame);
         results = makeResultPanel();
+        cards.addLayoutComponent(results, "Results Panel");
+        innerFrame.add(results);
         cards.show(innerFrame, "Results Panel");
       }
       
-      //If the result panel button play again is clicked create a new game and switch to the interactions panel
       else if(event.getSource() == playAgainButton){
         newGame = new WikipediaGame();
         startURLInput.setText("");
