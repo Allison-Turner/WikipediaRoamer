@@ -77,7 +77,7 @@ public abstract class Page{
         InputStream source = new URL(query).openStream();
         Scanner scan = new Scanner(source).useDelimiter("\"source\":\"");
         scan.next();
-        imageURL = scan.next().split("\"")[0];
+        if (scan.hasNext()) imageURL = scan.next().split("\"")[0];
         scan.close();
       }
     catch(IOException ex){
