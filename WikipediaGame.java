@@ -67,7 +67,7 @@ public class WikipediaGame{
   public LinkedList<Page> generatePath(){ //updated version O(nCHILDLIMIT^n)
     
     path = new LinkedList<Page>();
-    process = "Here are some of the places we looked to find your path: "; //for printing out purposes
+    process = "Here are some of the places we looked to find your path "; //for printing out purposes
      
     ForwardPage front = startPage;
     BackwardPage back = endPage;
@@ -81,7 +81,7 @@ public class WikipediaGame{
       while(bIter.hasMoreElements()){ //go through all the forward nodes
         String title = bIter.nextElement();
         //System.out.println("checking: " + title);
-        process += title;
+        process += ", " + title;
         if(forwardNodes.containsKey(title)){ //if a forward node is contained in backwardNodes we've got it!
           BackwardPage b = backwardNodes.get(title);
           ForwardPage f = forwardNodes.get(title);
