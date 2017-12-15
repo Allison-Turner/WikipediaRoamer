@@ -280,6 +280,20 @@ public class WikipediaGameGUI{
         result2.add(item);
       }
       
+      
+      //display a representation in words of the process the program took to find this path:
+      JPanel descriptionPanel = new JPanel(new FlowLayout());
+      JTextArea description = new JTextArea();
+      description.setLineWrap(true);
+      description.setForeground(textColor);
+      description.setBackground(backgroundColor);
+      description.setFont(textFont);
+      description.setEditable(false);
+      description.setText(newGame.getProcess());
+      descriptionPanel.add(description);
+      
+      
+      
     //Add a play again button to take you back to the interactions panel
     playAgainButton = new JButton("Play Again");
     playAgainButton.addActionListener(new ButtonListener());
@@ -288,6 +302,7 @@ public class WikipediaGameGUI{
     result3.setBackground(backgroundColor);
     result.add(result3, BorderLayout.PAGE_END);
     result.add(result2, BorderLayout.CENTER);
+    result.add(descriptionPanel, BorderLayout.CENTER);
     
     //Return the result JPanel
     return result;
@@ -315,8 +330,16 @@ public class WikipediaGameGUI{
         System.out.println(ex2);
       }
     }
-     myItemPanel.add(new JLabel(p.toString().replace("+"," ")));
-    //myItemPanel.setPreferredSize(new Dimension(150, 150));
+    
+    JTextArea caption = new JTextArea(p.toString().replace("+"," "));
+    caption.setLineWrap(true);
+    caption.setForeground(textColor);
+    caption.setBackground(backgroundColor);
+    caption.setFont(new Font("Sans Serif", Font.BOLD, 12));
+    caption.setEditable(false);
+    
+     myItemPanel.add(caption);
+    myItemPanel.setPreferredSize(myItemPanel.getPreferredSize());
     return myItemPanel;
   }
   
