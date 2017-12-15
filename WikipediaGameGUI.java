@@ -383,6 +383,8 @@ public class WikipediaGameGUI{
     return myItemPanel;
   }
   
+  /*Private internal class implements a version of MouseListener that takes a URL and navagates to that page on clicks
+  */
   private static class ItemPanelListener extends MouseAdapter implements MouseListener{
     private String URL;
     public ItemPanelListener(String url){
