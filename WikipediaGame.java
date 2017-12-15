@@ -71,6 +71,12 @@ public class WikipediaGame{
      
     ForwardPage front = startPage;
     BackwardPage back = endPage;
+    
+    if(front.equals(back)){
+      process = "";
+      return null;
+    }
+    
     forwardNodes.put(front.getTitle(), front);
     backwardNodes.put(back.getTitle(), back);
     int depth = 0;
