@@ -1,4 +1,4 @@
-/*@author Ellie Czepiel, Sammy Lincroft, and Allison Turner
+/*@author Ellie Czepiel(primary), Sammy Lincroft(secondary), and Allison Turner(secondary)
  * Last Modified: 14 December 2017
  * Purpose: This class creates a visually pleasing user interface with which to play the Wikipedia Game. It uses several different JPanels and switches between these using CardLayout
  */
