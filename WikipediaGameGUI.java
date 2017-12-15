@@ -298,7 +298,7 @@ public class WikipediaGameGUI{
     result.setBackground(backgroundColor);
       LinkedList<Page> path = newGame.getPath();
       result.setLayout(new BorderLayout());
-      JPanel errorContainer = new JPanel(new FlowLayout());
+      JPanel errorContainer = new JPanel(new GridLayout(2,1));
       errorContainer.setBackground(backgroundColor);
       JLabel error = new JLabel("Sorry we could not find your path. *sad*");
       error.setForeground(textColor);
@@ -321,7 +321,7 @@ public class WikipediaGameGUI{
       while(path != null && !path.isEmpty()){
         JPanel item = itemPanel(path.remove());
         error.setText("Here's the path we found between your pages (reads left to right):");
-        errPicLabel.setVisible(false);
+        errorContainer.remove(errPicLabel);
         result2.add(item);
       }
       result2.setPreferredSize(result2.getPreferredSize());
@@ -370,7 +370,7 @@ public class WikipediaGameGUI{
       myItemPanel.add(picLabel);
     }catch(IOException ex){
       try{
-        BufferedImage myPicture = ImageIO.read(new URL("https://a1.memecaptain.com/src_thumbs/85584.jpg"));
+        BufferedImage myPicture = ImageIO.read(new URL("https://images.sftcdn.net/images/t_optimized,f_auto/p/e019b8a6-9b50-11e6-9509-00163ec9f5fa/4055161674/wikipedia-widget-logo.png"));
         JLabel picLabel = new JLabel(new ImageIcon(myPicture));
         myItemPanel.add(picLabel);
       }catch(IOException ex2){
