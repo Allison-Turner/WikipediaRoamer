@@ -1,4 +1,4 @@
-/*@author Ellie Czepiel, Allison Turner, and Sammy Lincroft
+/*@author Ellie Czepiel(secondary), Allison Turner(primary), and Sammy Lincroft(secondary)
  * Last Modified: 14 December 2017
  * Purpose: This is a child of the Page class, specifying that this is a Page that is only concerned with what is linked to from this Page. It also can determine whether it shares a child with a BackwardPage
  */
