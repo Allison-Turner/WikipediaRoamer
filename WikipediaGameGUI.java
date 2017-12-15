@@ -293,8 +293,9 @@ public class WikipediaGameGUI{
     return result;
   }
   
-  /*
-   * 
+  /* helper method creates and returns a panel consisting of an image and the title of a given wikipedia page
+   * @param p the given wikipedia page
+   * @return the JPanel containing the image and the title
    */
    private static JPanel itemPanel(Page p){
     System.out.println("making an item panel out of " + p);
@@ -319,8 +320,7 @@ public class WikipediaGameGUI{
     return myItemPanel;
   }
   
-   /*
-    * 
+   /*Private internal class specifies actions for all the buttons in the GUI
     */
   private static class ButtonListener implements ActionListener{
     public void actionPerformed (ActionEvent event) {
