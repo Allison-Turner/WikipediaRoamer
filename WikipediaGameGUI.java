@@ -1,4 +1,4 @@
-/*@author Ellie Czepiel(primary), Sammy Lincroft(secondary), and Allison Turner(secondary)
+/*@author Ellie Czepiel, Sammy Lincroft, and Allison Turner
  * Last Modified: 14 December 2017
  * Purpose: This class creates a visually pleasing user interface with which to play the Wikipedia Game. It uses several different JPanels and switches between these using CardLayout
  */
@@ -28,8 +28,8 @@ public class WikipediaGameGUI{
   private static Component results;
   private static final Color backgroundColor = new Color(155, 130, 189);
   private static final Color textColor = new Color(240, 240, 240);
-  private static final Font headerFont = new Font("Serif", Font.BOLD, 48);
-  private static final Font textFont = new Font("Serif", Font.BOLD, 20);
+  private static final Font headerFont = new Font("Sans Serif", Font.BOLD, 48);
+  private static final Font textFont = new Font("Sans Serif", Font.BOLD, 20);
   
   /*
    *Builds the JFrame and all JPanels that will be displayed in the JFrame, then makes it visible 
@@ -72,7 +72,6 @@ public class WikipediaGameGUI{
     c.setPreferredSize(d);
     c.add(innerFrame);
     frame.pack();
-    frame.setResizable(false);
     frame.setPreferredSize(frame.getPreferredSize());
     frame.setVisible(true);
   }
@@ -117,23 +116,32 @@ public class WikipediaGameGUI{
    */
   private static Component makeInstructionPanel(){
     //Create an empty JPanel
-    JPanel result = new JPanel();
+    JPanel result = new JPanel(new GridLayout(5, 1));
     result.setBackground(backgroundColor);
     
     //Adding the section to explain what the game is
     JLabel whatIsGameLabel = new JLabel("What Is The Wikipedia Game?");
-    JLabel whatIsGameText = new JLabel(whatIsGameText());
+    whatIsGameLabel.setForeground(textColor);
+    whatIsGameLabel.setFont(headerFont);
+    JTextArea whatIsGameText = new JTextArea(whatIsGameText());
+    whatIsGameText.setLineWrap(true);
     whatIsGameText.setForeground(textColor);
-    whatIsGameText.setFont(headerFont);
-    //whatIsGameText.setEditable(false);
+    whatIsGameText.setBackground(backgroundColor);
+    whatIsGameText.setFont(textFont);
+    whatIsGameText.setEditable(false);
     result.add(whatIsGameLabel);
     result.add(whatIsGameText);
     
     //Adding the section to explain how to play
     JLabel instructionLabel = new JLabel("How to Play");
-    JLabel instructionText = new JLabel(instructionText());
+    instructionLabel.setForeground(textColor);
+    instructionLabel.setFont(headerFont);
+    JTextArea instructionText = new JTextArea(instructionText());
+    instructionText.setLineWrap(true);
     instructionText.setForeground(textColor);
-    //instructionText.setEditable(false);
+    instructionText.setBackground(backgroundColor);
+    instructionText.setFont(textFont);
+    instructionText.setEditable(false);
     result.add(instructionLabel);
     result.add(instructionText);
     
@@ -151,15 +159,15 @@ public class WikipediaGameGUI{
    */
   private static String whatIsGameText(){
     return ("This is a game that sprang from the sheer interconnectedness of Wikipedia. Pages link to dozens of other pages and are in turn linked to from dozens of other pages. " +
-              "You are given a start page URL and an end page URL, and must navigate from the former to the latter by only clicking links on that page and the subsequent pages. The fewer clicks, the better.");
+              "You are given a start page title and an end page title, and must navigate from the former to the latter by only clicking links on that page and the subsequent pages. The fewer clicks, the better.");
   }
   
   /*Creates the string required by the instructionText, because this text is rather long and would crowd the JPanel creation method
    *@return the text required to explain the instructions
    */
   private static String instructionText(){
-    return ("Enter the start URL and the end URL into their respective text fields. Click generate path, and the computer will begin to navigate through Wikipedia to find a path from one" +
-              "to the other. You can try to beat the computer, eitherin time-to-completion or in number of pages clicked, but really, we don't think that's likely.");
+    return ("Enter the start page's title and the end page's title into their respective text fields. Click generate path, and the computer will begin to navigate through Wikipedia to find a path from one" +
+              "to the other. You can try to beat the computer, either in time-to-completion or in number of pages clicked, but really, we don't think that's likely.");
   }
   
   /*Private method to create the JPanel where the user plays the game
@@ -192,6 +200,7 @@ public class WikipediaGameGUI{
     //Start URL label and field added
     JLabel startURLLabel = new JLabel("Starting Title: ");
     startURLLabel.setForeground(textColor);
+    startURLLabel.setFont(textFont);
     result.add(startURLLabel);
     
     startURLInput = new JTextField();
@@ -201,6 +210,7 @@ public class WikipediaGameGUI{
     //End URL label and field added
     JLabel endURLLabel = new JLabel("Ending Title: ");
     endURLLabel.setForeground(textColor);
+    endURLLabel.setFont(textFont);
     result.add(endURLLabel);
     
     endURLInput = new JTextField();
@@ -222,8 +232,9 @@ public class WikipediaGameGUI{
   private static JPanel descriptionPanel(){
     JPanel result = new JPanel();
     result.setBackground(backgroundColor);
-    JLabel description = new JLabel("Enter a starting URL and ending URL on Wikipedia and press Get Path!");
+    JLabel description = new JLabel("Enter a starting page title and ending page title on Wikipedia and press Get Path!");
     description.setForeground(textColor);
+    description.setFont(textFont);
     result.add(description);
     return result;
   }
@@ -234,18 +245,30 @@ public class WikipediaGameGUI{
   private static Component makeResultPanel(){
     //Create new JPanel
     JPanel result = new JPanel();
+    result.setBackground(backgroundColor);
       LinkedList<Page> path = newGame.getPath();
-      result.setLayout(new FlowLayout());
+      result.setLayout(new BorderLayout());
+      JLabel error = new JLabel("Sorry we could not find your path. *sad*");
+      error.setForeground(textColor);
+      error.setFont(textFont);
+      result.add(error, BorderLayout.PAGE_START);
       
+      JPanel result2 = new JPanel(new FlowLayout());
+      result2.setBackground(backgroundColor);
       //Generate an itemPanel for each page in the path
       while(path != null && !path.isEmpty()){
         JPanel item = itemPanel(path.remove());
-        result.add(item);
+        error.setText("Here's the path we found between your pages (reads left to right):");
+        result2.add(item);
       }
+      
     //Add a play again button to take you back to the interactions panel
     playAgainButton = new JButton("Play Again");
     playAgainButton.addActionListener(new ButtonListener());
-    result.add(playAgainButton);
+    JPanel result3 = new JPanel(new FlowLayout());
+    result3.add(playAgainButton);
+    result.add(result3, BorderLayout.PAGE_END);
+    result.add(result2, BorderLayout.CENTER);
     
     //Return the result JPanel
     return result;
@@ -257,6 +280,7 @@ public class WikipediaGameGUI{
    private static JPanel itemPanel(Page p){
     System.out.println("making an item panel out of " + p);
     JPanel myItemPanel = new JPanel();
+    myItemPanel.setBackground(backgroundColor);
     myItemPanel.setLayout(new FlowLayout());
     try{
       BufferedImage myPicture = ImageIO.read(new URL(p.getImageURL()));
@@ -265,7 +289,8 @@ public class WikipediaGameGUI{
     }catch(IOException ex){
       System.out.println(ex);
     }
-    myItemPanel.add(new JLabel(p.toString()));
+     myItemPanel.add(new JLabel(p.toString().replace("+"," ")));
+    myItemPanel.setPreferredSize(new Dimension(150, 150));
     return myItemPanel;
   }
   
@@ -276,7 +301,6 @@ public class WikipediaGameGUI{
     public void actionPerformed (ActionEvent event) {
       
       if (event.getSource() == seeInstructions){
-        System.out.println("See instructions clicked!!!");
         cards.show(innerFrame, "Instruction Panel");
       }
       
