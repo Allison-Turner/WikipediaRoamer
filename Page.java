@@ -1,5 +1,5 @@
 /*
- *@author Allison Turner, Sammy Lincroft, and Ellie Czepiel
+ *@author Allison Turner(primary), Sammy Lincroft(secondary), and Ellie Czepiel(secondary)
  * Last Modified: 13 December 2017
  * Purpose: This is the general form of a page within the bounds of the Wikipedia game algorithm. It only requires a page title and URL, and defines the maximum number of children that will be retrieved via webscraping
  */
