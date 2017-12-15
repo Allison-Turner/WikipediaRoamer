@@ -81,7 +81,9 @@ public class WikipediaGame{
       while(bIter.hasMoreElements()){ //go through all the forward nodes
         String title = bIter.nextElement();
         //System.out.println("checking: " + title);
-        process += ", " + title;
+        if(process.length() < 1500){
+          process += ", " + title;
+        }
         if(forwardNodes.containsKey(title)){ //if a forward node is contained in backwardNodes we've got it!
           BackwardPage b = backwardNodes.get(title);
           ForwardPage f = forwardNodes.get(title);
@@ -123,6 +125,7 @@ public class WikipediaGame{
     
     //if we gave up before finding anything... :(
     System.out.println("sorry, we could not find a path between your given nodes *sad*");
+    process = "";
     return null; //return null if no path was found
   }
   

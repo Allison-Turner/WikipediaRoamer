@@ -1,5 +1,5 @@
 /*
- *@author Allison Turner(primary), Sammy Lincroft(secondary), and Ellie Czepiel(secondary)
+ *@author Allison Turner, Sammy Lincroft, and Ellie Czepiel
  * Last Modified: 13 December 2017
  * Purpose: This is the general form of a page within the bounds of the Wikipedia game algorithm. It only requires a page title and URL, and defines the maximum number of children that will be retrieved via webscraping
  */
@@ -19,7 +19,7 @@ public abstract class Page{
    * @param String title is the title of the web page and summarizes what it's about
    */
   public Page(String url, String title){
-    this.url = url;
+    this.url = url.replace(" ", "+");
     this.title = title;
   }
   
@@ -34,7 +34,7 @@ public abstract class Page{
    *@param String url is the new URL of the page 
    */
   public void setURL(String url){
-    this.url = url;
+    this.url = url.replace(" ", "+");
   }
   
   /* Resets the title of the page
