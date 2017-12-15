@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.*;
-import java.net.URL;
+import java.net.*;
 
 public class WikipediaGameGUI{
   //Initializing all class variables. Some of these class variables usually are stored in separate JPanel child classes, but because the CardLayout requires access to the event listeners of certain buttons, the panels have to be created in this
@@ -84,12 +84,33 @@ public class WikipediaGameGUI{
     JPanel result = new JPanel(new BorderLayout());
     result.setBackground(backgroundColor);
     
+    JPanel title = new JPanel(new GridLayout(3, 1));
+    
     JLabel name = new JLabel();
     name.setText("The Wikipedia Game");
     name.setForeground(textColor);
     name.setFont(headerFont);
     name.setHorizontalAlignment(SwingConstants.CENTER);
-    result.add(name, BorderLayout.PAGE_START);
+    title.add(name);
+    JLabel authors = new JLabel();
+    authors.setText("Authors: Sammy Lincroft, Allison Turner, Ellie Czepiel");
+    authors.setForeground(textColor);
+    authors.setFont(textFont);
+    authors.setHorizontalAlignment(SwingConstants.CENTER);
+    title.add(authors);
+    title.setBackground(backgroundColor);
+    result.add(title, BorderLayout.PAGE_START);
+    JPanel imagePanel = new JPanel(new FlowLayout());
+    imagePanel.setBackground(backgroundColor);
+    
+    try{
+      BufferedImage image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/foundation/thumb/7/70/Wikipedia-puzzleglobe-V2.svg/1200px-Wikipedia-puzzleglobe-V2.svg.png"));
+      JLabel imageLabel = new JLabel(new ImageIcon(image));
+      imagePanel.add(imageLabel);
+    }
+    catch (Exception e){
+      System.out.println(e);
+    }
     
     JPanel result2 = new JPanel(new FlowLayout());
     
@@ -98,6 +119,7 @@ public class WikipediaGameGUI{
     ButtonListener listener = new ButtonListener();
     seeInstructions.addActionListener(listener); 
     result2.add(seeInstructions);
+    title.add(result2);
     
     //Create the button to switch to the game play JPanel and create its event listener
     playGame = new JButton("Play Game");
@@ -106,7 +128,8 @@ public class WikipediaGameGUI{
     result2.add(playGame);
     result2.setBackground(backgroundColor);
     
-    result.add(result2, BorderLayout.CENTER);
+    
+    result.add(imagePanel, BorderLayout.CENTER);
     
     //Return the menu JPanel
     return result;
@@ -117,7 +140,7 @@ public class WikipediaGameGUI{
    */
   private static Component makeInstructionPanel(){
     //Create an empty JPanel
-    JPanel result = new JPanel(new GridLayout(5, 1));
+    JPanel result = new JPanel(new GridLayout(6, 1));
     result.setBackground(backgroundColor);
     
     //Adding the section to explain what the game is
@@ -156,6 +179,7 @@ public class WikipediaGameGUI{
     result2.setBackground(backgroundColor);
     result.add(result2);
     
+    
     //Return the instruction JPanel
     return result;
   }
@@ -182,13 +206,30 @@ public class WikipediaGameGUI{
   private static Component makeInteractionPanel(){
     //Create an empty JPanel and set layout manager to BorderLayout
     JPanel result = new JPanel();
-    result.setLayout(new BorderLayout(10, 10));
+    result.setLayout(new GridLayout(2, 1));
     result.setBackground(backgroundColor);
     
-    //Add subpanels containing elements for gameplay and for description
-    result.add(userInputPanel(), BorderLayout.CENTER);
-    result.add(descriptionPanel(), BorderLayout.NORTH);
+    JPanel interactionPanel = new JPanel(new FlowLayout());
+    interactionPanel.setBackground(backgroundColor);
     
+    //Add subpanels containing elements for gameplay and for description
+    interactionPanel.add(descriptionPanel());
+    interactionPanel.add(userInputPanel());
+    result.add(interactionPanel);
+    
+    JPanel imagePanel = new JPanel(new FlowLayout());
+    imagePanel.setBackground(backgroundColor);
+    
+    try{
+      BufferedImage image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/foundation/thumb/7/70/Wikipedia-puzzleglobe-V2.svg/1200px-Wikipedia-puzzleglobe-V2.svg.png"));
+      JLabel imageLabel = new JLabel(new ImageIcon(image));
+      imagePanel.add(imageLabel);
+    }
+    catch (Exception e){
+      System.out.println(e);
+    }
+    
+    result.add(imagePanel);
     //Return interactions panel
     return result;
   }
@@ -200,7 +241,7 @@ public class WikipediaGameGUI{
   private static JPanel userInputPanel(){
     //Create new JPanel and set to flow layout
     JPanel result = new JPanel();
-    result.setLayout(new FlowLayout());
+    result.setLayout(new GridLayout(3, 2));
     result.setBackground(backgroundColor);
     
     //Start URL label and field added
@@ -210,7 +251,7 @@ public class WikipediaGameGUI{
     result.add(startURLLabel);
     
     startURLInput = new JTextField();
-    startURLInput.setPreferredSize(new Dimension(100, 20));
+    startURLInput.setPreferredSize(new Dimension(200, 20));
     result.add(startURLInput);
     
     //End URL label and field added
@@ -220,9 +261,11 @@ public class WikipediaGameGUI{
     result.add(endURLLabel);
     
     endURLInput = new JTextField();
-    endURLInput.setPreferredSize(new Dimension(100, 20));
+    endURLInput.setPreferredSize(new Dimension(200, 20));
     result.add(endURLInput);
     
+    //empty JLabel makes the button align on the bottom right instead of the bottom left
+    result.add(new JLabel(""));
     //Button to generate link path created, event listener created, button added
     getPathButton = new JButton("Get Path!");
     getPathButton.addActionListener(new ButtonListener()); 
@@ -238,9 +281,9 @@ public class WikipediaGameGUI{
   private static JPanel descriptionPanel(){
     JPanel result = new JPanel();
     result.setBackground(backgroundColor);
-    JLabel description = new JLabel("Enter a starting page title and ending page title on Wikipedia and press Get Path!");
+    JLabel description = new JLabel("Enter the titles of a starting page and an ending page and press Get Path!");
     description.setForeground(textColor);
-    description.setFont(textFont);
+    description.setFont(new Font("Sans Serif", Font.BOLD, 22));
     description.setHorizontalAlignment(SwingConstants.CENTER);
     result.add(description);
     return result;
@@ -281,7 +324,7 @@ public class WikipediaGameGUI{
         errPicLabel.setVisible(false);
         result2.add(item);
       }
-      
+      result2.setPreferredSize(result2.getPreferredSize());
       
       //display a representation in words of the process the program took to find this path:
       JPanel centerPanel = new JPanel(new GridLayout(2, 1));
@@ -289,7 +332,7 @@ public class WikipediaGameGUI{
       description.setLineWrap(true);
       description.setForeground(textColor);
       description.setBackground(backgroundColor);
-      description.setFont(new Font("Sans Serif", Font.BOLD, 12));
+      description.setFont(textFont);
       description.setEditable(false);
       description.setText(newGame.getProcess());
       centerPanel.setBackground(backgroundColor);
@@ -320,31 +363,42 @@ public class WikipediaGameGUI{
     System.out.println("making an item panel out of " + p);
     JPanel myItemPanel = new JPanel();
     myItemPanel.setBackground(backgroundColor);
-    myItemPanel.setLayout(new GridLayout(2, 1));
+    myItemPanel.setLayout(new FlowLayout());
     try{
       BufferedImage myPicture = ImageIO.read(new URL(p.getImageURL()));
       JLabel picLabel = new JLabel(new ImageIcon(myPicture));
       myItemPanel.add(picLabel);
     }catch(IOException ex){
       try{
-        BufferedImage myPicture = ImageIO.read(new URL("https://yt3.ggpht.com/-8BuNaUPlyQw/AAAAAAAAAAI/AAAAAAAAAAA/VxnVyYuleZo/s48-c-k-no-mo-rj-c0xffffff/photo.jpg"));
+        BufferedImage myPicture = ImageIO.read(new URL("https://a1.memecaptain.com/src_thumbs/85584.jpg"));
         JLabel picLabel = new JLabel(new ImageIcon(myPicture));
         myItemPanel.add(picLabel);
       }catch(IOException ex2){
         System.out.println(ex2);
       }
     }
-    
-    JTextArea caption = new JTextArea(p.toString().replace("+"," "));
-    caption.setLineWrap(true);
-    caption.setForeground(textColor);
-    caption.setBackground(backgroundColor);
-    caption.setFont(new Font("Sans Serif", Font.BOLD, 12));
-    caption.setEditable(false);
-    
-     myItemPanel.add(caption);
-    myItemPanel.setPreferredSize(myItemPanel.getPreferredSize());
+     myItemPanel.add(new JLabel(p.toString().replace("+"," ")));
+    myItemPanel.setPreferredSize(new Dimension(150, 150));
+    myItemPanel.addMouseListener(new ItemPanelListener(p.getURL()));
     return myItemPanel;
+  }
+  
+  private static class ItemPanelListener extends MouseAdapter implements MouseListener{
+    private String URL;
+    public ItemPanelListener(String url){
+      super();
+      URL = url;
+    }
+    
+    public void mouseClicked(MouseEvent event){
+      try{
+        java.awt.Desktop.getDesktop().browse(new java.net.URI(URL));
+      }catch(IOException ex){
+        System.out.println(ex);
+      }catch(URISyntaxException ex2){
+        System.out.println(ex2);
+      }
+    }
   }
   
    /*Private internal class specifies actions for all the buttons in the GUI
