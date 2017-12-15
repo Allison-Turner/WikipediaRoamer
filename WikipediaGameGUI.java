@@ -29,7 +29,7 @@ public class WikipediaGameGUI{
   private static final Color backgroundColor = new Color(155, 130, 189);
   private static final Color textColor = new Color(240, 240, 240);
   private static final Font headerFont = new Font("Sans Serif", Font.BOLD, 48);
-  private static final Font textFont = new Font("Sans Serif", Font.BOLD, 20);
+  private static final Font textFont = new Font("Sans Serif", Font.BOLD, 18);
   
   /*
    *Builds the JFrame and all JPanels that will be displayed in the JFrame, then makes it visible 
@@ -68,7 +68,7 @@ public class WikipediaGameGUI{
     
     //Finish up the JFrame and then make it visible and usable
     Container c = frame.getContentPane();
-    Dimension d = new Dimension(1000,400);
+    Dimension d = new Dimension(1000,800);
     c.setPreferredSize(d);
     c.add(innerFrame);
     frame.pack();
@@ -88,6 +88,7 @@ public class WikipediaGameGUI{
     name.setText("The Wikipedia Game");
     name.setForeground(textColor);
     name.setFont(headerFont);
+    name.setHorizontalAlignment(SwingConstants.CENTER);
     result.add(name, BorderLayout.PAGE_START);
     
     JPanel result2 = new JPanel(new FlowLayout());
@@ -123,6 +124,7 @@ public class WikipediaGameGUI{
     JLabel whatIsGameLabel = new JLabel("What Is The Wikipedia Game?");
     whatIsGameLabel.setForeground(textColor);
     whatIsGameLabel.setFont(headerFont);
+    whatIsGameLabel.setHorizontalAlignment(SwingConstants.CENTER);
     JTextArea whatIsGameText = new JTextArea(whatIsGameText());
     whatIsGameText.setLineWrap(true);
     whatIsGameText.setForeground(textColor);
@@ -136,6 +138,7 @@ public class WikipediaGameGUI{
     JLabel instructionLabel = new JLabel("How to Play");
     instructionLabel.setForeground(textColor);
     instructionLabel.setFont(headerFont);
+    instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
     JTextArea instructionText = new JTextArea(instructionText());
     instructionText.setLineWrap(true);
     instructionText.setForeground(textColor);
@@ -148,7 +151,10 @@ public class WikipediaGameGUI{
     //Add the button that will return the user to the menu panel and create its event listener
     seeMainMenu = new JButton("Back to Main Menu");
     seeMainMenu.addActionListener(new ButtonListener());
-    result.add(seeMainMenu);
+    JPanel result2 = new JPanel(new FlowLayout());
+    result2.add(seeMainMenu);
+    result2.setBackground(backgroundColor);
+    result.add(result2);
     
     //Return the instruction JPanel
     return result;
@@ -235,6 +241,7 @@ public class WikipediaGameGUI{
     JLabel description = new JLabel("Enter a starting page title and ending page title on Wikipedia and press Get Path!");
     description.setForeground(textColor);
     description.setFont(textFont);
+    description.setHorizontalAlignment(SwingConstants.CENTER);
     result.add(description);
     return result;
   }
@@ -251,7 +258,17 @@ public class WikipediaGameGUI{
       JLabel error = new JLabel("Sorry we could not find your path. *sad*");
       error.setForeground(textColor);
       error.setFont(textFont);
+      error.setHorizontalAlignment(SwingConstants.CENTER);
       result.add(error, BorderLayout.PAGE_START);
+      
+      JLabel errPicLabel = new JLabel();
+      try{
+        BufferedImage errorImage = ImageIO.read(new URL("http://protechitjobs.com/wp-content/uploads/2015/12/error-404-road-not-found.jpg"));
+        errPicLabel = new JLabel(new ImageIcon(errorImage));
+        result.add(errPicLabel, BorderLayout.PAGE_START);
+      }catch(IOException ex){
+        System.out.println(ex);
+      }
       
       JPanel result2 = new JPanel(new FlowLayout());
       result2.setBackground(backgroundColor);
@@ -259,6 +276,7 @@ public class WikipediaGameGUI{
       while(path != null && !path.isEmpty()){
         JPanel item = itemPanel(path.remove());
         error.setText("Here's the path we found between your pages (reads left to right):");
+        errPicLabel.setVisible(false);
         result2.add(item);
       }
       
@@ -267,6 +285,7 @@ public class WikipediaGameGUI{
     playAgainButton.addActionListener(new ButtonListener());
     JPanel result3 = new JPanel(new FlowLayout());
     result3.add(playAgainButton);
+    result3.setBackground(backgroundColor);
     result.add(result3, BorderLayout.PAGE_END);
     result.add(result2, BorderLayout.CENTER);
     
@@ -281,16 +300,22 @@ public class WikipediaGameGUI{
     System.out.println("making an item panel out of " + p);
     JPanel myItemPanel = new JPanel();
     myItemPanel.setBackground(backgroundColor);
-    myItemPanel.setLayout(new FlowLayout());
+    myItemPanel.setLayout(new GridLayout(2, 1));
     try{
       BufferedImage myPicture = ImageIO.read(new URL(p.getImageURL()));
       JLabel picLabel = new JLabel(new ImageIcon(myPicture));
       myItemPanel.add(picLabel);
     }catch(IOException ex){
-      System.out.println(ex);
+      try{
+        BufferedImage myPicture = ImageIO.read(new URL("https://yt3.ggpht.com/-8BuNaUPlyQw/AAAAAAAAAAI/AAAAAAAAAAA/VxnVyYuleZo/s48-c-k-no-mo-rj-c0xffffff/photo.jpg"));
+        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+        myItemPanel.add(picLabel);
+      }catch(IOException ex2){
+        System.out.println(ex2);
+      }
     }
      myItemPanel.add(new JLabel(p.toString().replace("+"," ")));
-    myItemPanel.setPreferredSize(new Dimension(150, 150));
+    //myItemPanel.setPreferredSize(new Dimension(150, 150));
     return myItemPanel;
   }
   
