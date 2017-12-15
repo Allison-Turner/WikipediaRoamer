@@ -255,17 +255,19 @@ public class WikipediaGameGUI{
     result.setBackground(backgroundColor);
       LinkedList<Page> path = newGame.getPath();
       result.setLayout(new BorderLayout());
+      JPanel errorContainer = new JPanel(new FlowLayout());
+      errorContainer.setBackground(backgroundColor);
       JLabel error = new JLabel("Sorry we could not find your path. *sad*");
       error.setForeground(textColor);
       error.setFont(textFont);
       error.setHorizontalAlignment(SwingConstants.CENTER);
-      result.add(error, BorderLayout.PAGE_START);
+      errorContainer.add(error);
       
       JLabel errPicLabel = new JLabel();
       try{
         BufferedImage errorImage = ImageIO.read(new URL("http://protechitjobs.com/wp-content/uploads/2015/12/error-404-road-not-found.jpg"));
         errPicLabel = new JLabel(new ImageIcon(errorImage));
-        result.add(errPicLabel, BorderLayout.PAGE_START);
+        errorContainer.add(errPicLabel);
       }catch(IOException ex){
         System.out.println(ex);
       }
@@ -282,15 +284,17 @@ public class WikipediaGameGUI{
       
       
       //display a representation in words of the process the program took to find this path:
-      JPanel descriptionPanel = new JPanel(new FlowLayout());
+      JPanel centerPanel = new JPanel(new GridLayout(2, 1));
       JTextArea description = new JTextArea();
       description.setLineWrap(true);
       description.setForeground(textColor);
       description.setBackground(backgroundColor);
-      description.setFont(textFont);
+      description.setFont(new Font("Sans Serif", Font.BOLD, 12));
       description.setEditable(false);
       description.setText(newGame.getProcess());
-      descriptionPanel.add(description);
+      centerPanel.setBackground(backgroundColor);
+      centerPanel.add(result2);
+      centerPanel.add(description);
       
       
       
@@ -301,8 +305,8 @@ public class WikipediaGameGUI{
     result3.add(playAgainButton);
     result3.setBackground(backgroundColor);
     result.add(result3, BorderLayout.PAGE_END);
-    result.add(result2, BorderLayout.CENTER);
-    result.add(descriptionPanel, BorderLayout.CENTER);
+    result.add(centerPanel, BorderLayout.CENTER);
+    result.add(errorContainer, BorderLayout.PAGE_START);
     
     //Return the result JPanel
     return result;
