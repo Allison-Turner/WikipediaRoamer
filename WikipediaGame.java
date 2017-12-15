@@ -53,13 +53,13 @@ public class WikipediaGame{
   }
   
   public void setStartTerm(String s){
-    String newS = s.replace(" ", "+");
+    String newS = s.replace(" ", "_");
     startURL = "https://en.wikipedia.org/wiki/" + newS;
     startPage = new ForwardPage(startURL, newS);
   }
   
   public void setEndTerm(String e){
-    String newE = e.replace(" ", "+");
+    String newE = e.replace(" ", "_");
     endURL = "https://en.wikipedia.org/wiki/" + newE;
     endPage = new BackwardPage(endURL, newE);
   }
