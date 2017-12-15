@@ -1,5 +1,5 @@
 /**WikipediaGame.java
-  * @author Samantha Lincroft, Ellie Czepiel, Allison Turner
+  * @author Samantha Lincroft (primary), Ellie Czepiel(secondary), Allison Turner(secondary)
   * @modified date 12/14/17
   * Purpose: Plays the Wikipedia game. This is the overarching class that governs the creation of the link path
   */
