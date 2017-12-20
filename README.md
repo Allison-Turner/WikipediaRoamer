@@ -1,5 +1,5 @@
 # WikipediaRoamer
-Project Title
+Project Description
 
 This algorithm finds a link path between any two English Wikipedia pages, in the fashion of the Wikipedia Game, found at https://thewikigame.com/
 
